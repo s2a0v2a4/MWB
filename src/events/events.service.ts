@@ -1,17 +1,20 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { CreateEventDto } from './dto/create-event.dto';
+import { Event } from './event.interface';
+
 
 @Injectable()
 export class EventsService {
-  private events = [];
+  private events: Event[] = [];
   private idCounter = 1;
 
-  findAll() {
+
+  findAll(): Event[] {
     return this.events;
   }
 
-  create(createEventDto: CreateEventDto) {
-    const newEvent = {
+  create(createEventDto: CreateEventDto): Event {
+    const newEvent: Event = {
       id: this.idCounter++,
       ...createEventDto,
       participants: 0,
@@ -20,7 +23,7 @@ export class EventsService {
     return newEvent;
   }
 
-  joinEvent(id: number) {
+  join(id: number): Event { 
     const event = this.events.find(ev => ev.id === id);
     if (!event) {
       throw new NotFoundException('Event not found');

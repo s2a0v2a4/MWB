@@ -2,7 +2,7 @@ import { Controller, Get, Post, Body, Param, ParseIntPipe } from '@nestjs/common
 import { EventsService } from './events.service';
 import { CreateEventDto } from './dto/create-event.dto';
 
-@Controller('api/events')
+@Controller('events')
 export class EventsController {
   constructor(private readonly eventsService: EventsService) {}
 
@@ -18,6 +18,6 @@ export class EventsController {
 
   @Post(':id/join')
   join(@Param('id', ParseIntPipe) id: number) {
-    return this.eventsService.joinEvent(id);
+    return this.eventsService.join(id);
   }
 }
