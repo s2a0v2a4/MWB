@@ -1,4 +1,4 @@
-import { IsString, IsNotEmpty, IsIn, Matches } from 'class-validator';
+import { IsString, IsNotEmpty, IsIn, Matches, IsOptional, IsInt, Min } from 'class-validator';
 
 export class CreateEventDto {
   @IsString()
@@ -10,12 +10,15 @@ export class CreateEventDto {
   description: string;
 
   @IsString()
-  @IsIn(['Sport', 'Musik', 'Kunst'])  // erlaubte Kategorien
+  @IsIn(['Sport', 'Musik', 'Kunst'])
   category: string;
 
   @IsString()
-  @Matches(/^([0-1]\d|2[0-3]):([0-5]\d)$/, { message: 'Time must be in HH:mm format' })  // Uhrzeit Format
+  @Matches(/^([0-1]\d|2[0-3]):([0-5]\d)$/, { message: 'Time must be in HH:mm format' })
   time: string;
 
+  @IsOptional()
+  @IsInt()
+  @Min(0)
   participants?: number;
 }
