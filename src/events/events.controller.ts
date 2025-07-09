@@ -1,4 +1,29 @@
-import { Controller, Get, Post, Body, Param, ParseIntPipe } from '@nestjs/common';
+// import { Controller, Get, Post, Body, Param, ParseIntPipe } from '@nestjs/common';
+// import { EventsService } from './events.service';
+// import { CreateEventDto } from './dto/create-event.dto';
+
+// @Controller('api/events')
+// export class EventsController {
+//   constructor(private readonly eventsService: EventsService) {}
+
+//   @Get()
+//   findAll() {
+//     return this.eventsService.findAll();
+//   }
+
+//   @Post()
+//   create(@Body() createEventDto: CreateEventDto) {
+//     return this.eventsService.create(createEventDto);
+//   }
+
+//   @Post(':id/join')
+//   join(@Param('id', ParseIntPipe) id: number) {
+//     return this.eventsService.join(id);
+//   }
+// }
+
+
+import { Controller, Get, Post, Body, Param, Delete, NotFoundException } from '@nestjs/common';
 import { EventsService } from './events.service';
 import { CreateEventDto } from './dto/create-event.dto';
 
@@ -17,7 +42,12 @@ export class EventsController {
   }
 
   @Post(':id/join')
-  join(@Param('id', ParseIntPipe) id: number) {
-    return this.eventsService.joinEvent(id);
+  join(@Param('id') id: string) {
+    return this.eventsService.join(id);
+  }
+
+  @Delete(':id')
+  remove(@Param('id') id: string) {
+    return this.eventsService.remove(id);
   }
 }
