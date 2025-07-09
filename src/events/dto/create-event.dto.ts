@@ -18,6 +18,5 @@ export class CreateEventDto {
   time: string;
 
   participants?: number;
-  time: string;
   type: string;
 }
