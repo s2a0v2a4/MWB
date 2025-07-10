@@ -1,11 +1,3 @@
-import { Module } from '@nestjs/common';
-import { InterestsController } from './interests/interests.controller';
-
-@Module({
-  controllers: [InterestsController],
-})
-export class AppModule {}
-
 import { Controller, Get, Post, Body, BadRequestException } from '@nestjs/common';
 
 @Controller('api/interests')
