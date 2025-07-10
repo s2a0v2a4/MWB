@@ -27,7 +27,7 @@ import { Controller, Get, Post, Body, Param, Delete, ParseIntPipe } from '@nestj
 import { EventsService } from './events.service';
 import { CreateEventDto } from './dto/create-event.dto';
 
-@Controller('api/events')
+@Controller('events') // ❗️ kein doppeltes 'api' mehr!
 export class EventsController {
   constructor(private readonly eventsService: EventsService) {}
 

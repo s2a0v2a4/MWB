@@ -10,11 +10,54 @@
 
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
+import { Logger } from '@nestjs/common';
+
+// Environment-Setup für Development
+if (!process.env.NODE_ENV) {
+  process.env.NODE_ENV = 'development';
+  process.env.PORT = '5000';
+  process.env.FRONTEND_URL = 'http://localhost:3000';
+  process.env.CORS_ORIGINS = 'http://localhost:3000,http://127.0.0.1:3000';
+  process.env.LOG_LEVEL = 'debug';
+}
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  app.enableCors(); // CORS für Frontendzugriff erlauben
-  await app.listen(3000);
-  console.log('Server running on http://localhost:3000');
+  const logger = new Logger('Bootstrap');
+
+  // Environment-abhängige Konfiguration
+  const isDevelopment = process.env.NODE_ENV !== 'production';
+  const port = process.env.PORT || 5000;
+  const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
+  const corsOrigins = process.env.CORS_ORIGINS?.split(',') || ['http://localhost:3000'];
+
+  // CORS konfigurieren
+  app.enableCors({
+    origin: corsOrigins,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization', 'X-Requested-With'],
+    credentials: true,
+  });
+
+  // ✅ Verwende einheitlich NUR 'api' als globaler Prefix – nicht 'api/v1'
+  app.setGlobalPrefix('api');
+
+  // Security Headers für Produktion
+  if (!isDevelopment) {
+    app.use((req, res, next) => {
+      res.header('X-Content-Type-Options', 'nosniff');
+      res.header('X-Frame-Options', 'DENY');
+      res.header('X-XSS-Protection', '1; mode=block');
+      next();
+    });
+  }
+
+  await app.listen(port);
+  
+  logger.log(`🚀 Server running on http://localhost:${port}`);
+  logger.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
+  logger.log(`🔗 CORS enabled for: ${corsOrigins.join(', ')}`);
+  logger.log(`📡 API endpoints: http://localhost:${port}/api/interests`);
+  logger.log(`📡 Health check: http://localhost:${port}/api`);
 }
 bootstrap();
