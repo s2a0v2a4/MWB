@@ -1,12 +1,4 @@
-import { Module } from '@nestjs/common';
-import { InterestsController } from './interests/interests.controller';
-
-@Module({
-  controllers: [InterestsController],
-})
-export class AppModule {}
-
-import { Controller, Get, Post, Body, BadRequestException } from '@nestjs/common';
+import { Controller, Get, Post, Body, BadRequestException, Logger } from '@nestjs/common';
 
 @Controller('interests') // ❗️ kein doppeltes 'api' mehr!
 export class InterestsController {
