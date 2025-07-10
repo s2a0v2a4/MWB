@@ -1,27 +1,4 @@
-// import { Module } from '@nestjs/common';
-// import { EventsModule } from './events/events.module';
-
-// @Module({
-//   imports: [EventsModule],
-// })
-// export class AppModule {}
-
-import { Module } from '@nestjs/common';
-import { EventsModule } from './events/events.module';
-import { InterestsModule } from './interests/interests.module';
-import { RequestLoggerMiddleware } from './middleware/request-logger.middleware';
-
-@Module({
-  imports: [EventsModule, InterestsModule],
-})
-export class AppModule implements NestModule {
-  configure(consumer: MiddlewareConsumer) {
-    consumer
-      .apply(RequestLoggerMiddleware)
-      .forRoutes('*'); // Für alle Routes
-  }
-}
-
+// TypeScript
 import { Test, TestingModule } from '@nestjs/testing';
 import { InterestsController } from './interests.controller';
 import { BadRequestException } from '@nestjs/common';
