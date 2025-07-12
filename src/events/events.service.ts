@@ -4,11 +4,64 @@ import { Event } from './interfaces/event.interface';
 
 @Injectable()
 export class EventsService {
-  private events: Event[] = [];
-  private idCounter = 1;
+  private events: Event[] = [
+    // Beispiel-Events zum Testen
+    {
+      id: 1,
+      title: 'Fußball im Stadtpark',
+      description:
+        'Lockeres Fußballspiel für alle Level. Bringt eigene Getränke mit!',
+      category: 'Sport',
+      time: '18:00',
+      participants: 8,
+    },
+    {
+      id: 2,
+      title: 'Jazz Jam Session',
+      description:
+        'Offene Jazz Session im Kulturzentrum. Instrumente vorhanden.',
+      category: 'Musik',
+      time: '20:00',
+      participants: 12,
+    },
+    {
+      id: 3,
+      title: 'Aquarell Workshop',
+      description: 'Lerne Aquarell-Techniken in entspannter Atmosphäre.',
+      category: 'Kunst',
+      time: '14:00',
+      participants: 6,
+    },
+    {
+      id: 4,
+      title: 'Basketball Training',
+      description:
+        'Training für Anfänger und Fortgeschrittene in der Sporthalle.',
+      category: 'Sport',
+      time: '19:30',
+      participants: 10,
+    },
+    {
+      id: 5,
+      title: 'Konzert im Park',
+      description:
+        'Klassik-Konzert unter freiem Himmel mit lokalen Musikern.',
+      category: 'Musik',
+      time: '16:00',
+      participants: 45,
+    },
+  ];
+  private idCounter = 6; // Start nach den Beispiel-Events
 
   findAll(): Event[] {
     return this.events;
+  }
+
+  findByCategories(categories: string[]): Event[] {
+    // Filter Events nach Kategorien
+    return this.events.filter(event =>
+      categories.includes(event.category),
+    );
   }
 
   create(createEventDto: CreateEventDto): Event {

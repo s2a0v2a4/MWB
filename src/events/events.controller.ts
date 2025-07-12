@@ -23,7 +23,7 @@
 // }
 
 
-import { Controller, Get, Post, Body, Param, Delete, ParseIntPipe } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, ParseIntPipe, Query } from '@nestjs/common';
 import { EventsService } from './events.service';
 import { CreateEventDto } from './dto/create-event.dto';
 
@@ -32,7 +32,11 @@ export class EventsController {
   constructor(private readonly eventsService: EventsService) {}
 
   @Get()
-  findAll() {
+  findAll(@Query('categories') categories?: string) {
+    if (categories) {
+      const categoryList = categories.split(',');
+      return this.eventsService.findByCategories(categoryList);
+    }
     return this.eventsService.findAll();
   }
 

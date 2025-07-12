@@ -1,4 +1,5 @@
 import { Controller, Get, Post, Body, BadRequestException, Logger } from '@nestjs/common';
+import { mapInterestsToCategories } from './interest-category.mapping';
 
 @Controller('interests') // ❗️ kein doppeltes 'api' mehr!
 export class InterestsController {
@@ -14,6 +15,16 @@ export class InterestsController {
     };
     this.logger.log(`Returning interests: ${JSON.stringify(result)}`);
     return result;
+  }
+
+  @Get('categories')
+  getSelectedCategories() {
+    const categories = mapInterestsToCategories(this.userInterests);
+    return {
+      categories,
+      count: categories.length,
+      interests: this.userInterests,
+    };
   }
 
   @Post()
