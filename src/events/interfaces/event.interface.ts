@@ -3,7 +3,8 @@ export interface EventDto {
   title: string;
   description: string;
   category: string;
-  time: string;
+  time: string;        // HH:mm Format
+  date: string;        // ✅ YYYY-MM-DD Format hinzugefügt
   type: string;
   participants: number;
   latitude: number;

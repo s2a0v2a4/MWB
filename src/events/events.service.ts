@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
-import { EventDto } from './interfaces/event.interface';  // ✅ EventDto Import
+import { EventDto } from './interfaces/event.interface';
 import { CreateEventDto } from './dto/create-event.dto';
 
 @Injectable()
 export class EventsService {
-  private events: EventDto[] = [  // ✅ Vollständige EventDto Objekte
+  private events: EventDto[] = [
     {
       id: 1,
       title: 'Fußball im Stadtpark',
@@ -12,68 +12,14 @@ export class EventsService {
       category: 'Sport',
       type: 'Football',
       time: '18:00',
+      date: '2024-07-15',  // ✅ date in allen Events verfügbar
       participants: 8,
       latitude: 50.9866,
-      longitude: 12.9716,
-    },
-    {
-      id: 2,
-      title: 'Jazz Jam Session',
-      description: 'Offene Jazz Session im Kulturzentrum. Instrumente vorhanden.',
-      category: 'Musik',
-      type: 'Concert',
-      time: '20:00',
-      participants: 12,
-      latitude: 50.9856,
-      longitude: 12.9726,
-    },
-    {
-      id: 3,
-      title: 'Kunstausstellung',
-      description: 'Lokale Künstler stellen ihre Werke aus. Eintritt frei!',
-      category: 'Kunst',
-      type: 'Exhibition',
-      time: '16:00',
-      participants: 25,
-      latitude: 50.9876,
-      longitude: 12.9706,
-    },
-    {
-      id: 4,
-      title: 'Volleyball am See',
-      description: 'Beach-Volleyball am Schwanenteich. Für Anfänger und Profis.',
-      category: 'Sport',
-      type: 'Volleyball',
-      time: '15:30',
-      participants: 6,
-      latitude: 50.9846,
-      longitude: 12.9736,
-    },
-    {
-      id: 5,
-      title: 'Konzert im Park',
-      description: 'Live-Musik verschiedener Bands. Picknick erwünscht!',
-      category: 'Musik',
-      type: 'Concert',
-      time: '19:00',
-      participants: 45,
-      latitude: 50.9886,
-      longitude: 12.9696,
-    },
-    {
-      id: 8,
-      title: 'Test Event',
-      description: 'Test Description',
-      category: 'Sport',
-      time: '14:00',
-      type: 'Test',
-      participants: 4,  // ✅ Korrekt übernommen!
-      latitude: 50.9866,
-      longitude: 12.9716,
+      longitude: 12.9716
     }
   ];
 
-  private nextId = 6;
+  private nextId = 2;
 
   findAll(): EventDto[] {
     return this.events;
@@ -86,8 +32,7 @@ export class EventsService {
   create(createEventDto: CreateEventDto): EventDto {
     const newEvent: EventDto = {
       id: this.nextId++,
-      ...createEventDto,
-      // ✅ participants nur setzen wenn nicht im DTO vorhanden
+      ...createEventDto,  // ✅ date wird automatisch aus DTO übernommen
       participants: createEventDto.participants ?? 0,
     };
 

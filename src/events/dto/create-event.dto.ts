@@ -22,6 +22,13 @@ export class CreateEventDto {
 
   @IsString()
   @IsNotEmpty()
+  @Matches(/^\d{4}-\d{2}-\d{2}$/, {
+    message: 'Date must be in YYYY-MM-DD format (e.g., 2024-12-25)',
+  })
+  date: string;
+
+  @IsString()
+  @IsNotEmpty()
   type: string;
 
   @IsNumber()
