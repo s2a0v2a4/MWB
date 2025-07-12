@@ -109,3 +109,17 @@ export const useEvents = (filterByInterests = false) => {
     refresh: () => mutate(),
   };
 };
+
+// Beispiel für das Erstellen eines Events
+// POST http://localhost:5000/api/events
+// Content-Type: application/json
+
+// {
+//   "title": "Wanderung zum Rochlitzer Berg",
+//   "description": "Gemütliche Wanderung mit schöner Aussicht",
+//   "category": "Sport",
+//   "time": "10:00",
+//   "type": "Hiking",
+//   "latitude": 51.0234,
+//   "longitude": 12.7986
+// }

@@ -11,7 +11,7 @@ export class CreateEventDto {
 
   @IsString()
   @IsNotEmpty()
-  category: string; // 'Sport', 'Musik', 'Kunst'
+  category: string;
 
   @IsString()
   @IsNotEmpty()
@@ -20,20 +20,23 @@ export class CreateEventDto {
   })
   time: string;
 
-  @IsOptional()
   @IsString()
-  type?: string;
+  @IsNotEmpty()
+  type: string;
 
-  // ➕ Neue Geo-Koordinaten Felder
-  @IsOptional()
   @IsNumber()
   @Min(-90)
   @Max(90)
-  latitude?: number;
+  latitude: number;
 
-  @IsOptional()
   @IsNumber()
   @Min(-180)
   @Max(180)
-  longitude?: number;
+  longitude: number;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  @Max(1000)
+  participants?: number;
 }

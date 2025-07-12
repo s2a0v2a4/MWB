@@ -26,13 +26,14 @@
 import { Controller, Get, Post, Body, Param, Delete, ParseIntPipe, Query } from '@nestjs/common';
 import { EventsService } from './events.service';
 import { CreateEventDto } from './dto/create-event.dto';
+import { EventDto } from './interfaces/event.interface';
 
-@Controller('events') // ❗️ kein doppeltes 'api' mehr!
+@Controller('events')
 export class EventsController {
   constructor(private readonly eventsService: EventsService) {}
 
   @Get()
-  findAll(@Query('categories') categories?: string) {
+  findAll(@Query('categories') categories?: string): EventDto[] {
     if (categories) {
       const categoryList = categories.split(',');
       return this.eventsService.findByCategories(categoryList);
@@ -41,17 +42,18 @@ export class EventsController {
   }
 
   @Post()
-  create(@Body() createEventDto: CreateEventDto) {
+  create(@Body() createEventDto: CreateEventDto): EventDto {
+    // ✅ Einfach direkt an Service weiterleiten
     return this.eventsService.create(createEventDto);
   }
 
   @Post(':id/join')
-  join(@Param('id', ParseIntPipe) id: number) {
+  join(@Param('id', ParseIntPipe) id: number): EventDto {
     return this.eventsService.join(id);
   }
 
   @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number) {
+  remove(@Param('id', ParseIntPipe) id: number): { message: string } {
     return this.eventsService.remove(id);
   }
 }

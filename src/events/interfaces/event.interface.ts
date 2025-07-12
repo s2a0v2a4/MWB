@@ -1,11 +1,11 @@
-export interface Event {
+export interface EventDto {
   id: number;
   title: string;
   description: string;
   category: string;
   time: string;
+  type: string;
   participants: number;
-  type?: string;
-  latitude?: number;  // ➕ Neu hinzugefügt
-  longitude?: number; // ➕ Neu hinzugefügt
+  latitude: number;
+  longitude: number;
 }
