@@ -12,11 +12,24 @@ export class EventsService {
       category: 'Sport',
       type: 'Football',
       time: '18:00',
-      date: '2024-07-15',  // ✅ date in allen Events verfügbar
+      date: '2025-07-15', // Hinzugefügt
       participants: 8,
       latitude: 50.9866,
-      longitude: 12.9716
-    }
+      longitude: 12.9716,
+    },
+    {
+      id: 2,
+      title: 'Jazz Konzert',
+      description: 'Live Jazz Musik im Park. Entspannte Atmosphäre für alle Musikliebhaber.',
+      category: 'Musik',
+      type: 'Concert',
+      time: '20:00',
+      date: '2025-07-16', // Hinzugefügt
+      participants: 25,
+      latitude: 50.9876,
+      longitude: 12.9726,
+    },
+    // Weitere Events entsprechend aktualisieren...
   ];
 
   private nextId = 2;
@@ -31,9 +44,16 @@ export class EventsService {
 
   create(createEventDto: CreateEventDto): EventDto {
     const newEvent: EventDto = {
-      id: this.nextId++,
-      ...createEventDto,  // ✅ date wird automatisch aus DTO übernommen
-      participants: createEventDto.participants ?? 0,
+      id: ++this.nextId,
+      title: createEventDto.name,
+      description: `${createEventDto.type} Event`,
+      category: this.mapTypeToCategory(createEventDto.type),
+      type: createEventDto.type,
+      time: createEventDto.time,
+      date: createEventDto.date, // Neues Feld hinzugefügt
+      participants: createEventDto.participants,
+      latitude: createEventDto.position[0],
+      longitude: createEventDto.position[1],
     };
 
     this.events.push(newEvent);

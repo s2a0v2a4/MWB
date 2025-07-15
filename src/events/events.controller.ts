@@ -23,7 +23,7 @@
 // }
 
 
-import { Controller, Get, Post, Body, Param, Delete, ParseIntPipe, Query } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Delete, ParseIntPipe, Query, BadRequestException, Logger } from '@nestjs/common';
 import { EventsService } from './events.service';
 import { CreateEventDto } from './dto/create-event.dto';
 import { EventDto } from './interfaces/event.interface';
@@ -43,8 +43,28 @@ export class EventsController {
 
   @Post()
   create(@Body() createEventDto: CreateEventDto): EventDto {
-    // ✅ Einfach direkt an Service weiterleiten
-    return this.eventsService.create(createEventDto);
+    this.logger.log(`POST /api/events called with: ${JSON.stringify(createEventDto)}`);
+    
+    // Validation für required fields
+    if (!createEventDto.name || !createEventDto.type || !createEventDto.time || 
+        !createEventDto.date || !createEventDto.position || createEventDto.participants === undefined) {
+      throw new BadRequestException('Missing required fields: name, type, time, date, position, participants');
+    }
+
+    // Date format validation (YYYY-MM-DD)
+    const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+    if (!dateRegex.test(createEventDto.date)) {
+      throw new BadRequestException('Date must be in YYYY-MM-DD format');
+    }
+
+    // Position validation
+    if (!Array.isArray(createEventDto.position) || createEventDto.position.length !== 2) {
+      throw new BadRequestException('Position must be an array with [latitude, longitude]');
+    }
+
+    const result = this.eventsService.create(createEventDto);
+    this.logger.log(`Event created: ${JSON.stringify(result)}`);
+    return result;
   }
 
   @Post(':id/join')
