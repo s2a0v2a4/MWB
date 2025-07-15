@@ -23,22 +23,31 @@
 // }
 
 
-import { Controller, Get, Post, Body, Param, Delete, ParseIntPipe, Query, BadRequestException, Logger } from '@nestjs/common';
+import { Controller, Get, Post, Body, Param, Query, BadRequestException, Logger } from '@nestjs/common';
 import { EventsService } from './events.service';
-import { CreateEventDto } from './dto/create-event.dto';
 import { EventDto } from './interfaces/event.interface';
+import { CreateEventDto } from './dto/create-event.dto';
 
 @Controller('events')
 export class EventsController {
+  private readonly logger = new Logger(EventsController.name);
+
   constructor(private readonly eventsService: EventsService) {}
 
   @Get()
   findAll(@Query('categories') categories?: string): EventDto[] {
+    this.logger.log('GET /api/events called');
+    
+    let result: EventDto[];
     if (categories) {
       const categoryList = categories.split(',');
-      return this.eventsService.findByCategories(categoryList);
+      result = this.eventsService.findByCategories(categoryList);
+    } else {
+      result = this.eventsService.findAll();
     }
-    return this.eventsService.findAll();
+    
+    this.logger.log(`Returning ${result.length} events`);
+    return result;
   }
 
   @Post()
@@ -51,15 +60,15 @@ export class EventsController {
       throw new BadRequestException('Missing required fields: name, type, time, date, position, participants');
     }
 
+    // Position validation
+    if (!Array.isArray(createEventDto.position) || createEventDto.position.length !== 2) {
+      throw new BadRequestException('Position must be an array with [latitude, longitude]');
+    }
+
     // Date format validation (YYYY-MM-DD)
     const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
     if (!dateRegex.test(createEventDto.date)) {
       throw new BadRequestException('Date must be in YYYY-MM-DD format');
-    }
-
-    // Position validation
-    if (!Array.isArray(createEventDto.position) || createEventDto.position.length !== 2) {
-      throw new BadRequestException('Position must be an array with [latitude, longitude]');
     }
 
     const result = this.eventsService.create(createEventDto);
@@ -68,12 +77,7 @@ export class EventsController {
   }
 
   @Post(':id/join')
-  join(@Param('id', ParseIntPipe) id: number): EventDto {
-    return this.eventsService.join(id);
-  }
-
-  @Delete(':id')
-  remove(@Param('id', ParseIntPipe) id: number): { message: string } {
-    return this.eventsService.remove(id);
+  join(@Param('id') id: string): EventDto {
+    return this.eventsService.join(+id);
   }
 }
