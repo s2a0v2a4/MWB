@@ -24,10 +24,12 @@
 
 
 import { Controller, Get, Post, Body, Param, Query, BadRequestException, Logger } from '@nestjs/common';
+import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiParam, ApiQuery } from '@nestjs/swagger';
 import { EventsService } from './events.service';
 import { EventDto } from './interfaces/event.interface';
 import { CreateEventDto } from './dto/create-event.dto';
 
+@ApiTags('Events')
 @Controller('events')
 export class EventsController {
   private readonly logger = new Logger(EventsController.name);
@@ -35,6 +37,9 @@ export class EventsController {
   constructor(private readonly eventsService: EventsService) {}
 
   @Get()
+  @ApiOperation({ summary: 'Get all events or filter by categories' })
+  @ApiQuery({ name: 'categories', required: false, description: 'Comma-separated list of categories' })
+  @ApiResponse({ status: 200, description: 'List of events.' })
   findAll(@Query('categories') categories?: string): EventDto[] {
     this.logger.log('GET /api/events called');
     
@@ -51,6 +56,10 @@ export class EventsController {
   }
 
   @Post()
+  @ApiOperation({ summary: 'Create a new event' })
+  @ApiBody({ type: CreateEventDto })
+  @ApiResponse({ status: 201, description: 'Event created.' })
+  @ApiResponse({ status: 400, description: 'Missing or invalid fields.' })
   create(@Body() createEventDto: CreateEventDto): EventDto {
     this.logger.log(`POST /api/events called with: ${JSON.stringify(createEventDto)}`);
     
@@ -77,6 +86,9 @@ export class EventsController {
   }
 
   @Post(':id/join')
+  @ApiOperation({ summary: 'Join an event by ID' })
+  @ApiParam({ name: 'id', type: String, description: 'Event ID' })
+  @ApiResponse({ status: 201, description: 'Joined event.' })
   join(@Param('id') id: string): EventDto {
     return this.eventsService.join(+id);
   }

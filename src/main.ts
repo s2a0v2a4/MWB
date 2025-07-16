@@ -11,13 +11,15 @@
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { Logger } from '@nestjs/common';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import * as swaggerUi from 'swagger-ui-express';
 
 // Environment-Setup für Development
 if (!process.env.NODE_ENV) {
   process.env.NODE_ENV = 'development';
   process.env.PORT = '5000';
   process.env.FRONTEND_URL = 'http://localhost:3000';
-  process.env.CORS_ORIGINS = 'http://localhost:3000,http://127.0.0.1:3000', "http://172.17.212.179:3000";
+  process.env.CORS_ORIGINS = 'http://localhost:3000,http://127.0.0.1:3000,http://172.17.212.179:3000';
   process.env.LOG_LEVEL = 'debug';
 }
 
@@ -52,6 +54,17 @@ async function bootstrap() {
     });
   }
 
+  // Swagger-Dokumentation
+  const config = new DocumentBuilder()
+    .setTitle('API-Dokumentation')
+    .setDescription('Beschreibung der API-Endpunkte')
+    .setVersion('1.0')
+    .addTag('nestjs')
+    .build();
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api/docs', app, document);
+  // app.use('/api/docs', swaggerUi.serve, swaggerUi.setup(document)); // Not needed, SwaggerModule.setup handles this
+
   await app.listen(port);
   
   logger.log(`🚀 Server running on http://localhost:${port}`);
@@ -61,3 +74,4 @@ async function bootstrap() {
   logger.log(`📡 Health check: http://localhost:${port}/api`);
 }
 bootstrap();
+
