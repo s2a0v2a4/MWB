@@ -7,7 +7,7 @@ Die Anwendung funktioniert sowohl über GitHub Pages als auch lokal – das Back
 
 ---------------------------------------------------------------------------------------------------------------
 
-schreib im Terminal bash
+Füg ein in Terminal bash
 git pull origin main
 
 ---------------------------------------------------------------------------------------------------------------
