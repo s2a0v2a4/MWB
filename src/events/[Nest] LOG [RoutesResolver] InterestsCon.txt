@@ -1,1 +1,0 @@
-[Nest] LOG [RoutesResolver] InterestsController {/api/interests}
