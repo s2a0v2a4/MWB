@@ -1,9 +1,5 @@
 import { Controller, Get, Post, Body, Param, Query, BadRequestException, Logger } from '@nestjs/common';
-<<<<<<< HEAD
 import { ApiTags, ApiOperation, ApiResponse, ApiQuery, ApiParam, ApiBody } from '@nestjs/swagger';
-=======
-import { ApiTags, ApiOperation, ApiResponse, ApiBody, ApiParam, ApiQuery } from '@nestjs/swagger';
->>>>>>> 7b1ad9be6eba91db2856bfca9151adbacf2e7430
 import { EventsService } from './events.service';
 import { EventDto } from './interfaces/event.interface';
 import { CreateEventDto } from './dto/create-event.dto';
@@ -16,7 +12,6 @@ export class EventsController {
   constructor(private readonly eventsService: EventsService) {}
 
   @Get()
-<<<<<<< HEAD
   @ApiOperation({
     summary: 'Alle Events abrufen',
     description: 'Gibt eine Liste aller Events zurück. Optional kann nach Kategorien gefiltert werden.',
@@ -44,11 +39,6 @@ export class EventsController {
       ],
     },
   })
-=======
-  @ApiOperation({ summary: 'Get all events or filter by categories' })
-  @ApiQuery({ name: 'categories', required: false, description: 'Comma-separated list of categories' })
-  @ApiResponse({ status: 200, description: 'List of events.' })
->>>>>>> 7b1ad9be6eba91db2856bfca9151adbacf2e7430
   findAll(@Query('categories') categories?: string): EventDto[] {
     this.logger.log('GET /api/events called');
     let result: EventDto[];
@@ -65,7 +55,6 @@ export class EventsController {
   }
 
   @Post()
-<<<<<<< HEAD
   @ApiOperation({
     summary: 'Neues Event erstellen',
     description: 'Erstellt ein neues Event mit allen erforderlichen Informationen wie Name, Typ, Datum, Zeit, Teilnehmerzahl und Position.',
@@ -102,12 +91,7 @@ export class EventsController {
       },
     },
   })
-=======
-  @ApiOperation({ summary: 'Create a new event' })
-  @ApiBody({ type: CreateEventDto })
-  @ApiResponse({ status: 201, description: 'Event created.' })
   @ApiResponse({ status: 400, description: 'Missing or invalid fields.' })
->>>>>>> 7b1ad9be6eba91db2856bfca9151adbacf2e7430
   create(@Body() createEventDto: CreateEventDto): EventDto {
     this.logger.log(`POST /api/events called with: ${JSON.stringify(createEventDto)}`);
 
@@ -137,7 +121,6 @@ export class EventsController {
   }
 
   @Post(':id/join')
-<<<<<<< HEAD
   @ApiOperation({
     summary: 'Event beitreten',
     description: 'Erhöht die Teilnehmerzahl des angegebenen Events um 1.',
@@ -163,11 +146,6 @@ export class EventsController {
       },
     },
   })
-=======
-  @ApiOperation({ summary: 'Join an event by ID' })
-  @ApiParam({ name: 'id', type: String, description: 'Event ID' })
-  @ApiResponse({ status: 201, description: 'Joined event.' })
->>>>>>> 7b1ad9be6eba91db2856bfca9151adbacf2e7430
   join(@Param('id') id: string): EventDto {
     return this.eventsService.join(+id);
   }
