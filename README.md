@@ -6,6 +6,11 @@ MWF ist das Frontend einer Event-Plattform, mit der Nutzer Veranstaltungen nach 
 Die Anwendung funktioniert sowohl über GitHub Pages als auch lokal – das Backend ist für beide Umgebungen konfiguriert
 
 ---------------------------------------------------------------------------------------------------------------
+
+schreib im Terminal bash
+git pull origin main
+
+---------------------------------------------------------------------------------------------------------------
 Local: 
 Frontend MWF: npm run dev
 Backend MWB: npm run start:dev
