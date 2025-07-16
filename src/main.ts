@@ -1,18 +1,8 @@
-// import { NestFactory } from '@nestjs/core';
-// import { AppModule } from './app.module';
-
-// async function bootstrap() {
-//   const app = await NestFactory.create(AppModule);
-//   app.enableCors(); // Damit Frontend auf anderem Port zugreifen kann
-//   await app.listen(3000);
-// }
-// bootstrap();
-
 import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { Logger } from '@nestjs/common';
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
-// Environment-Setup für Development
 if (!process.env.NODE_ENV) {
   process.env.NODE_ENV = 'development';
   process.env.PORT = '5000';
@@ -25,13 +15,11 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const logger = new Logger('Bootstrap');
 
-  // Environment-abhängige Konfiguration
   const isDevelopment = process.env.NODE_ENV !== 'production';
   const port = process.env.PORT || 5000;
   const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000';
   const corsOrigins = process.env.CORS_ORIGINS?.split(',') || ['http://localhost:3000'];
 
-  // CORS konfigurieren
   app.enableCors({
     origin: corsOrigins,
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
@@ -39,10 +27,8 @@ async function bootstrap() {
     credentials: true,
   });
 
-  // ✅ Verwende einheitlich NUR 'api' als globaler Prefix – nicht 'api/v1'
   app.setGlobalPrefix('api');
 
-  // Security Headers für Produktion
   if (!isDevelopment) {
     app.use((req, res, next) => {
       res.header('X-Content-Type-Options', 'nosniff');
@@ -52,12 +38,22 @@ async function bootstrap() {
     });
   }
 
+  // ✅ Swagger Doku
+  const config = new DocumentBuilder()
+    .setTitle('Event & Interest API')
+    .setDescription('API-Dokumentation für Events und Interessen')
+    .setVersion('1.0')
+    .addTag('Events')
+    .addTag('Interest')
+    .build();
+
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api/docs', app, document);
+
   await app.listen(port);
-  
-  logger.log(`🚀 Server running on http://localhost:${port}`);
-  logger.log(`🌍 Environment: ${process.env.NODE_ENV || 'development'}`);
-  logger.log(`🔗 CORS enabled for: ${corsOrigins.join(', ')}`);
-  logger.log(`📡 API endpoints: http://localhost:${port}/api/interests`);
-  logger.log(`📡 Health check: http://localhost:${port}/api`);
+
+  logger.log(`🚀 Server läuft auf http://localhost:${port}`);
+  logger.log(`📄 Swagger-Doku: http://localhost:${port}/api/docs`);
+  logger.log(`📡 API-Endpunkte: http://localhost:${port}/api/events`);
 }
 bootstrap();
